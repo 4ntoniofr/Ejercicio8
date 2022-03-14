@@ -22,12 +22,10 @@
 package avl;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Antonio J. Nebro
- * Date: 08/07/13
- * Time: 15:46
+ * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:46
  */
 public class AvlNode<T> {
+
   private AvlNode<T> left;
   private AvlNode<T> right;
   private AvlNode<T> parent;
@@ -127,14 +125,14 @@ public class AvlNode<T> {
 
   public boolean isLeaf() {
 
-    return (!hasLeft() && !hasRight()) ;
+    return (!hasLeft() && !hasRight());
   }
 
   public boolean hasOnlyALeftChild() {
-    return (hasLeft() && !hasRight()) ;
+    return (hasLeft() && !hasRight());
   }
 
   public boolean hasOnlyARightChild() {
-    return  (hasRight() && !hasLeft()) ;
+    return (hasRight() && !hasLeft());
   }
 }

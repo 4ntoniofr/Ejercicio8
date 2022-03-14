@@ -25,11 +25,8 @@ package avl;
 import java.util.Comparator;
 
 /**
- * Created with IntelliJ IDEA.
- * User: Antonio J. Nebro
- * Date: 08/07/13
- * Time: 15:51
- * Class implementing Avl trees.
+ * Created with IntelliJ IDEA. User: Antonio J. Nebro Date: 08/07/13 Time: 15:51 Class implementing
+ * Avl trees.
  */
 public class AvlTree<T> {
 
@@ -174,8 +171,8 @@ public class AvlTree<T> {
    * Searches for the closest node of the node passed as argument
    *
    * @param node
-   * @return -1 if node has to be inserted in the left, +1 if it must be
-   * inserted in the right, 0 otherwise
+   * @return -1 if node has to be inserted in the left, +1 if it must be inserted in the right, 0
+   * otherwise
    */
   public int searchClosestNode(AvlNode<T> node) {
     AvlNode<T> currentNode;
@@ -407,7 +404,7 @@ public class AvlTree<T> {
   }
 
   public String toString() {
-    String result ;
+    String result;
 
     result = inOrder(top);
 
