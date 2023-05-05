@@ -42,6 +42,9 @@ public class AvlNode<T> {
    * @param item
    */
   public AvlNode(T item) {
+    if(item == null)
+      throw new IllegalArgumentException("Item cannot be null");
+
     this.left = null;
     this.right = null;
     this.parent = null;
@@ -80,6 +83,9 @@ public class AvlNode<T> {
   }
 
   public void setItem(T item) {
+    if(item == null)
+      throw new IllegalArgumentException("Item cannot be null");
+
     this.item = item;
   }
 
