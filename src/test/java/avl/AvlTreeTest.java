@@ -1,6 +1,8 @@
 package avl;
 
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.Mockito;
 
 import java.util.Comparator;
@@ -51,7 +53,7 @@ public class AvlTreeTest {
 
         AvlNode<Integer> topNodeAfterInserting = avlTree.getTop();
         String obtainedTree = avlTree.toString();
-        
+
         assertEquals(node, topNodeAfterInserting);
         assertEquals(expectedTree, obtainedTree);
     }
@@ -143,10 +145,10 @@ public class AvlTreeTest {
             avlTree.insertAvlNode(nodeRight);
 
             assertThat(node).isEqualTo(nodeRight.getParent());
-            assertEquals(nodeRight, node.getRight());
+            assertThat(nodeRight).isEqualTo(node.getRight());
 
             String tree = " | 6 | 9";
-            assertEquals(tree, avlTree.toString());
+            assertThat(tree).isEqualTo(avlTree.toString());
         }
     }
 
@@ -160,35 +162,32 @@ public class AvlTreeTest {
             int result;
             AvlNode<Integer> node = new AvlNode<>(7);
             result = avlTree.searchClosestNode(node);
-            assertEquals(0, result);
+            assertThat(0).isEqualTo(result);
             avlTree.insertAvlNode(node);
 
             node = new AvlNode<>(4);
             result = avlTree.searchClosestNode(node);
-            assertEquals(-1, result);
+            assertThat(-1).isEqualTo(result);
             avlTree.insertAvlNode(node);
 
             node = new AvlNode<>(9);
             result = avlTree.searchClosestNode(node);
-            assertEquals(1, result);
+            assertThat(1).isEqualTo(result);
             avlTree.insertAvlNode(node);
 
             node = new AvlNode<>(6);
             result = avlTree.searchClosestNode(node);
-            assertEquals(1, result);
+            assertThat(1).isEqualTo(result);
             avlTree.insertAvlNode(node);
 
             node = new AvlNode<>(8);
             result = avlTree.searchClosestNode(node);
-            assertEquals(-1, result);
+            assertThat(-1).isEqualTo(result);
             avlTree.insertAvlNode(node);
 
             String tree = " | 7 | 4 | 6 | 9 | 8";
-            assertEquals(tree, avlTree.toString());
+            assertThat(tree).isEqualTo(avlTree.toString());
         }
-
-
-
 
         @DisplayName("(7, 4, 9, 3, 5), then the tree is balanced and height is calculated")
         @Test
@@ -197,128 +196,121 @@ public class AvlTreeTest {
 
             node1 = new AvlNode<>(7);
             avlTree.insertAvlNode(node1);
-            assertEquals(0, node1.getHeight());
-            assertEquals(0, avlTree.getBalance(node1));
+            assertThat(node1.getHeight()).isEqualTo(0);
+            assertThat(avlTree.getBalance(node1)).isEqualTo(0);
 
             node2 = new AvlNode<>(4);
             avlTree.insertAvlNode(node2);
-            assertEquals(0, node2.getHeight());
-            assertEquals(1, node1.getHeight());
-            assertEquals(-1, avlTree.getBalance(node1));
-            assertEquals(0, avlTree.getBalance(node2));
+            assertThat(node2.getHeight()).isEqualTo(0);
+            assertThat(node1.getHeight()).isEqualTo(1);
+            assertThat(avlTree.getBalance(node1)).isEqualTo(-1);
+            assertThat(avlTree.getBalance(node2)).isEqualTo(0);
 
             node3 = new AvlNode<>(9);
             avlTree.insertAvlNode(node3);
-            assertEquals(0, node3.getHeight());
-            assertEquals(1, node1.getHeight());
-            assertEquals(0, avlTree.getBalance(node1));
-            assertEquals(0, avlTree.getBalance(node3));
+            assertThat(node3.getHeight()).isEqualTo(0);
+            assertThat(node1.getHeight()).isEqualTo(1);
+            assertThat(avlTree.getBalance(node1)).isEqualTo(0);
+            assertThat(avlTree.getBalance(node3)).isEqualTo(0);
 
             node4 = new AvlNode<>(3);
             avlTree.insertAvlNode(node4);
-            assertEquals(0, node4.getHeight());
-            assertEquals(1, node2.getHeight());
-            assertEquals(2, node1.getHeight());
-            assertEquals(-1, avlTree.getBalance(node2));
-            assertEquals(-1, avlTree.getBalance(node1));
-            assertEquals(0, avlTree.getBalance(node4));
+            assertThat(node4.getHeight()).isEqualTo(0);
+            assertThat(node2.getHeight()).isEqualTo(1);
+            assertThat(node1.getHeight()).isEqualTo(2);
+            assertThat(avlTree.getBalance(node2)).isEqualTo(-1);
+            assertThat(avlTree.getBalance(node1)).isEqualTo(-1);
+            assertThat(avlTree.getBalance(node4)).isEqualTo(0);
 
             node5 = new AvlNode<>(5);
             avlTree.insertAvlNode(node5);
-            assertEquals(0, node5.getHeight());
-            assertEquals(1, node2.getHeight());
-            assertEquals(2, node1.getHeight());
-            assertEquals(0, avlTree.getBalance(node2));
-            assertEquals(-1, avlTree.getBalance(node1));
-            assertEquals(0, avlTree.getBalance(node5));
+            assertThat(node5.getHeight()).isEqualTo(0);
+            assertThat(node2.getHeight()).isEqualTo(1);
+            assertThat(node1.getHeight()).isEqualTo(2);
+            assertThat(avlTree.getBalance(node2)).isEqualTo(0);
+            assertThat(avlTree.getBalance(node1)).isEqualTo(-1);
+            assertThat(avlTree.getBalance(node5)).isEqualTo(0);
 
             String tree = " | 7 | 4 | 3 | 5 | 9";
-            assertEquals(tree, avlTree.toString());
+            assertThat(tree).isEqualTo(avlTree.toString());
         }
 
-        /**
-         * Testing adding 7 - 4 - 3
-         */
+        @DisplayName("(7, 4, 3) double left nodes, then the tree is rebalanced")
         @Test
         public void testInsertingLeftLeftNodeAndRebalance() {
-            AvlNode<Integer> node1, node2, node3, node4, node5;
+            AvlNode<Integer> node1, node2, node3;
 
             node1 = new AvlNode<>(7);
             avlTree.insertAvlNode(node1);
-            assertEquals(0, node1.getHeight());
-            assertEquals(0, avlTree.getBalance(node1));
+            assertThat(node1.getHeight()).isEqualTo(0);
+            assertThat(avlTree.getBalance(node1)).isEqualTo(0);
 
             node2 = new AvlNode<>(4);
             avlTree.insertAvlNode(node2);
-            assertEquals(0, node2.getHeight());
-            assertEquals(1, node1.getHeight());
-            assertEquals(-1, avlTree.getBalance(node1));
-            assertEquals(0, avlTree.getBalance(node2));
+            assertThat(node2.getHeight()).isEqualTo(0);
+            assertThat(node1.getHeight()).isEqualTo(1);
+            assertThat(avlTree.getBalance(node1)).isEqualTo(-1);
+            assertThat(avlTree.getBalance(node2)).isEqualTo(0);
 
             node3 = new AvlNode<>(3);
             avlTree.insertAvlNode(node3);
-            assertEquals(node2, avlTree.getTop());
-            assertEquals(node3, node2.getLeft());
-            assertEquals(node1, node2.getRight());
+            assertThat(avlTree.getTop()).isEqualTo(node2);
+            assertThat(node2.getLeft()).isEqualTo(node3);
+            assertThat(node2.getRight()).isEqualTo(node1);
 
-            assertEquals(1, avlTree.getTop().getHeight());
-            assertEquals(0,
-                    avlTree.getTop().getLeft().getHeight());
-            assertEquals(0,
-                    avlTree.getTop().getRight().getHeight());
-            assertEquals(-1, avlTree.height(node1.getLeft()));
-            assertEquals(-1, avlTree.height(node1.getRight()));
-            assertEquals(-1, avlTree.height(node3.getLeft()));
-            assertEquals(-1, avlTree.height(node3.getRight()));
+            assertThat(avlTree.getTop().getHeight()).isEqualTo(1);
+            assertThat(avlTree.getTop().getLeft().getHeight()).isEqualTo(0);
+            assertThat(avlTree.getTop().getRight().getHeight()).isEqualTo(0);
+            assertThat(avlTree.height(node1.getLeft())).isEqualTo(-1);
+            assertThat(avlTree.height(node1.getRight())).isEqualTo(-1);
+            assertThat(avlTree.height(node3.getLeft())).isEqualTo(-1);
+            assertThat(avlTree.height(node3.getRight())).isEqualTo(-1);
 
             String tree = " | 4 | 3 | 7";
-            assertEquals(tree, avlTree.toString());
+            assertThat(tree).isEqualTo(avlTree.toString());
         }
     }
 
 
-    /**
-     * Testing adding 7 - 10 - 14
-     */
+    @DisplayName("(7, 10, 14) double right nodes, then the tree is rebalanced")
     @Test
     public void testInsertingRightRightNodeAndRebalance() {
-        AvlNode<Integer> node1, node2, node3, node4, node5;
+        AvlNode<Integer> node1, node2, node3;
 
         node1 = new AvlNode<>(7);
         avlTree.insertAvlNode(node1);
-        assertEquals(0, node1.getHeight());
-        assertEquals(0, avlTree.getBalance(node1));
+        assertThat(0).isEqualTo(node1.getHeight());
+        assertThat(0).isEqualTo(avlTree.getBalance(node1));
 
         node2 = new AvlNode<>(10);
         avlTree.insertAvlNode(node2);
-        assertEquals(0, node2.getHeight());
-        assertEquals(1, node1.getHeight());
-        assertEquals(1, avlTree.getBalance(node1));
-        assertEquals(0, avlTree.getBalance(node2));
+        assertThat(0).isEqualTo(node2.getHeight());
+        assertThat(1).isEqualTo(node1.getHeight());
+        assertThat(1).isEqualTo(avlTree.getBalance(node1));
+        assertThat(0).isEqualTo(avlTree.getBalance(node2));
 
         node3 = new AvlNode<>(14);
         avlTree.insertAvlNode(node3);
-        assertEquals(node2, avlTree.getTop());
-        assertEquals(node1, node2.getLeft());
-        assertEquals(node3, node2.getRight());
+        assertThat(node2).isEqualTo(avlTree.getTop());
+        assertThat(node1).isEqualTo(node2.getLeft());
+        assertThat(node3).isEqualTo(node2.getRight());
 
-        assertEquals(1, avlTree.getTop().getHeight());
-        assertEquals(0,
-                avlTree.getTop().getLeft().getHeight());
-        assertEquals(0,
-                avlTree.getTop().getRight().getHeight());
-        assertEquals(-1, avlTree.height(node1.getLeft()));
-        assertEquals(-1, avlTree.height(node1.getRight()));
-        assertEquals(-1, avlTree.height(node3.getLeft()));
-        assertEquals(-1, avlTree.height(node3.getRight()));
+        assertThat(1).isEqualTo(avlTree.getTop().getHeight());
+        assertThat(0).isEqualTo(avlTree.getTop().getLeft().getHeight());
+        assertThat(0).isEqualTo(avlTree.getTop().getRight().getHeight());
+        assertThat(-1).isEqualTo(avlTree.height(node1.getLeft()));
+        assertThat(-1).isEqualTo(avlTree.height(node1.getRight()));
+        assertThat(-1).isEqualTo(avlTree.height(node3.getLeft()));
+        assertThat(-1).isEqualTo(avlTree.height(node3.getRight()));
 
         String tree = " | 10 | 7 | 14";
-        assertEquals(tree, avlTree.toString());
+        assertThat(tree).isEqualTo(avlTree.toString());
     }
 
     /**
      * Testing adding 7 - 4 - 3 - 2 - 1
      */
+    @DisplayName("(7, 4, 3, 2, 1), then height and tree are rebalanced")
     @Test
     public void testInserting7_4_3_2_1() {
         AvlNode<Integer> node1, node2, node3, node4, node5;
@@ -335,17 +327,17 @@ public class AvlTreeTest {
         avlTree.insertAvlNode(node4);
         avlTree.insertAvlNode(node5);
 
-        assertEquals(node2, avlTree.getTop());
-        assertEquals(node4, node2.getLeft());
-        assertEquals(node1, node2.getRight());
-        assertEquals(node5, node4.getLeft());
-        assertEquals(node3, node4.getRight());
-        assertEquals(0, node1.getHeight());
-        assertEquals(2, node2.getHeight());
-        assertEquals(1, node4.getHeight());
+        assertThat(node2).isEqualTo(avlTree.getTop());
+        assertThat(node4).isEqualTo(node2.getLeft());
+        assertThat(node1).isEqualTo(node2.getRight());
+        assertThat(node5).isEqualTo(node4.getLeft());
+        assertThat(node3).isEqualTo(node4.getRight());
+        assertThat(0).isEqualTo(node1.getHeight());
+        assertThat(2).isEqualTo(node2.getHeight());
+        assertThat(1).isEqualTo(node4.getHeight());
 
         String tree = " | 4 | 2 | 1 | 3 | 7";
-        assertEquals(tree, avlTree.toString());
+        assertThat(tree).isEqualTo(avlTree.toString());
     }
 
     /**
@@ -418,96 +410,75 @@ public class AvlTreeTest {
      * Testing adding 7 - 9 - 8
      */
     @Test
-    public void testInsertingRightLeftNodeAndRebalance() {
+    @DisplayName("When inserting both left and right node, then tree is rebalanced")
+    public void testInsertingRightLeftNodeAndRebalanced() {
         AvlNode<Integer> node1, node2, node3;
-
         node1 = new AvlNode<>(7);
-        avlTree.insertAvlNode(node1);
-
         node2 = new AvlNode<>(9);
-        avlTree.insertAvlNode(node2);
-
         node3 = new AvlNode<>(8);
+
+        avlTree.insertAvlNode(node1);
+        avlTree.insertAvlNode(node2);
         avlTree.insertAvlNode(node3);
 
-        assertEquals(node3, avlTree.getTop());
-        assertEquals(node1, node3.getLeft());
-        assertEquals(node2, node3.getRight());
+        assertThat(avlTree.getTop())
+                .isEqualTo(node3);
+        assertThat(node3.getLeft())
+                .isEqualTo(node1);
+        assertThat(node3.getRight())
+                .isEqualTo(node2);
 
-        assertEquals(1, avlTree.getTop().getHeight());
-        assertEquals(0,
-                avlTree.getTop().getLeft().getHeight());
-        assertEquals(0,
-                avlTree.getTop().getRight().getHeight());
-        assertEquals(-1, avlTree.height(node2.getLeft()));
-        assertEquals(-1, avlTree.height(node2.getRight()));
-        assertEquals(-1, avlTree.height(node1.getLeft()));
-        assertEquals(-1, avlTree.height(node1.getRight()));
+        assertThat(avlTree.getTop().getHeight())
+                .isEqualTo(1);
+        assertThat(avlTree.getTop().getLeft().getHeight())
+                .isEqualTo(0);
+        assertThat(avlTree.getTop().getRight().getHeight())
+                .isEqualTo(0);
+        assertThat(avlTree.height(node2.getLeft()))
+                .isEqualTo(-1);
+        assertThat(avlTree.height(node2.getRight()))
+                .isEqualTo(-1);
+        assertThat(avlTree.height(node1.getLeft()))
+                .isEqualTo(-1);
+        assertThat(avlTree.height(node1.getRight()))
+                .isEqualTo(-1);
 
         String tree = " | 8 | 7 | 9";
-        assertEquals(tree, avlTree.toString());
+        assertThat(avlTree)
+                .hasToString(tree);
     }
 
     @Test
-    public void testSearchNode() {
-        AvlNode<Integer> node1, node2, node3, node4, node5;
+    @DisplayName("When nodes exists, then return valid node")
+    public void search_WhenNodeWithItemExist_ReturnValidNode() {
+        insertNodes(avlTree, 7, 9, 8, 2, 3);
 
-        node1 = new AvlNode<>(7);
-        avlTree.insertAvlNode(node1);
+        assertThat(avlTree.search(7).getItem())
+                .isEqualTo(7);
+        assertThat(avlTree.search(9).getItem())
+                .isEqualTo(9);
+        assertThat(avlTree.search(8).getItem())
+                .isEqualTo(8);
+        assertThat(avlTree.searchNode(getNode(2)).getItem())
+                .isEqualTo(2);
+        assertThat(avlTree.search(3).getItem())
+                .isEqualTo(3);
+        assertThat(avlTree.search(14))
+                .isNull();
+        assertThat(avlTree.search(0))
+                .isNull();
 
-        node2 = new AvlNode<>(9);
-        avlTree.insertAvlNode(node2);
-
-        node3 = new AvlNode<>(8);
-        avlTree.insertAvlNode(node3);
-
-        node4 = new AvlNode<>(2);
-        avlTree.insertAvlNode(node4);
-
-        node5 = new AvlNode<>(3);
-        avlTree.insertAvlNode(node5);
-
-        assertEquals(node1, avlTree.search(7));
-        assertEquals(node2, avlTree.search(9));
-        assertEquals(node3, avlTree.search(8));
-        assertEquals((Integer) 2,
-                avlTree.searchNode(new AvlNode<>(2)).getItem());
-        assertEquals(node4, avlTree.search(2));
-        assertEquals(node5, avlTree.search(3));
-        assertNull(avlTree.search(14));
-        assertNull(avlTree.search(0));
 
         String tree = " | 8 | 3 | 2 | 7 | 9";
-        assertEquals(tree, avlTree.toString());
+        assertThat(avlTree)
+                .hasToString(tree);
     }
 
     @Test
+    @DisplayName("When node have successor, return valid successor")
     public void testFindSuccessor() {
+        insertNodes(avlTree, 20, 8, 22, 4, 12, 24, 10, 14);
         AvlNode<Integer> node;
-
-        node = new AvlNode<>(20);
-        avlTree.insertAvlNode(node);
-
-        node = new AvlNode<>(8);
-        avlTree.insertAvlNode(node);
-
-        node = new AvlNode<>(22);
-        avlTree.insertAvlNode(node);
-
-        node = new AvlNode<>(4);
-        avlTree.insertAvlNode(node);
-
-        node = new AvlNode<>(12);
-        avlTree.insertAvlNode(node);
-
-        node = new AvlNode<>(24);
-        avlTree.insertAvlNode(node);
-
-        node = new AvlNode<>(10);
-        avlTree.insertAvlNode(node);
-
-        node = new AvlNode<>(14);
-        avlTree.insertAvlNode(node);
 
         node = avlTree.search(8);
         assertEquals(avlTree.search(10), avlTree.findSuccessor(node));
@@ -517,12 +488,14 @@ public class AvlTreeTest {
         assertEquals(avlTree.search(20), avlTree.findSuccessor(node));
 
         String tree = " | 20 | 8 | 4 | 12 | 10 | 14 | 22 | 24";
-        assertEquals(tree, avlTree.toString());
+        assertThat(avlTree)
+                .hasToString(tree);
     }
 
     @Test
-    public void testDeletingLeafNodes() {
-        insertNodes(avlTree,7,9,2,8,3);
+    @DisplayName("When deleting every node, then the tree should be empty")
+    public void delete_WhenDeletingEveryNode_ReturnsEmptyTree() {
+        insertNodes(avlTree, 7, 9, 2, 8, 3);
         AvlNode<Integer> node1, node2, node3, node4, node5;
 
         node1 = new AvlNode<>(7);
@@ -541,7 +514,8 @@ public class AvlTreeTest {
         avlTree.insertAvlNode(node5);
 
         String tree = " | 7 | 2 | 3 | 9 | 8";
-        assertEquals(tree, avlTree.toString());
+        assertThat(avlTree)
+                .hasToString(tree);
 
         avlTree.delete(3); // right leaf node
 
@@ -571,22 +545,22 @@ public class AvlTreeTest {
                 .isNull();
         assertThat(avlTree.search(7).getHeight())
                 .isEqualTo(1);
-        assertThat(avlTree.getTop().getHeight())
-                .isEqualTo(1);
-
-
-        assertNull(node1.getLeft());
-        assertEquals(1, node1.getHeight());
-        assertEquals(" | 7 | 9", avlTree.toString());
+        assertThat(avlTree)
+                .hasToString(" | 7 | 9");
 
         avlTree.delete(9); // right leaf node
-        assertNull(node1.getRight());
-        assertEquals(0, node1.getHeight());
-        assertEquals(" | 7", avlTree.toString());
+
+        assertThat(avlTree.search(7).getRight())
+                .isNull();
+        assertThat(avlTree)
+                .hasToString(" | 7");
 
         avlTree.delete(7); // left leaf node
-        assertNull(avlTree.getTop());
-        assertEquals("", avlTree.toString());
+
+        assertThat(avlTree.getTop())
+                .isNull();
+        assertThat(avlTree)
+                .hasToString("");
     }
 
     @Test
@@ -602,10 +576,6 @@ public class AvlTreeTest {
 
         assertThat(avlTree.search(7).getLeft().getItem())
                 .isEqualTo(3);
-        assertThat(avlTree.search(2).getRight())
-                .isNull();
-        assertThat(avlTree.search(2).getHeight())
-                .isEqualTo(0);
         assertThat(avlTree.getTop().getHeight())
                 .isEqualTo(2);
         assertThat(avlTree)
@@ -613,12 +583,8 @@ public class AvlTreeTest {
 
         avlTree.delete(9);
 
-        assertThat(avlTree.search(7).getRight().getItem())
-                .isEqualTo(9);
-        assertThat(avlTree.search(9).getLeft())
+        assertThat(avlTree.search(7).getRight())
                 .isNull();
-        assertThat(avlTree.search(9).getHeight())
-                .isEqualTo(0);
         assertThat(avlTree.getTop().getHeight())
                 .isEqualTo(1);
         assertThat(avlTree)
