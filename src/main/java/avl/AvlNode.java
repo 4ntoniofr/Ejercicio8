@@ -93,10 +93,6 @@ public class AvlNode<T> {
     return height;
   }
 
-  public void setHeight(int height) {
-    this.height = height;
-  }
-
   public void updateHeight() {
     if (!hasLeft() && !hasRight()) {
       height = 0;
